@@ -1,12 +1,13 @@
 import useFilter from "./hooks/useFilter";
 import "./App.css";
-import { useState } from "react";
-import HighlightedText from "./components/HighlightedText";
+import { useState, useMemo, useRef, useEffect } from "react";
+import SearchedCard from "./components/SearchedCard";
 
 function App() {
   const { fullTextSearch } = useFilter();
-
   const [searchedField, setSearchedField] = useState("");
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const resultContainer = useRef();
 
   const debouncedSearch = () => {
     let timeout;
@@ -17,31 +18,65 @@ function App() {
     };
   };
 
+  const filteredArray = useMemo(
+    () => fullTextSearch(searchedField),
+    [searchedField, fullTextSearch]
+  );
+
+  const handleKeyDown = (e) => {
+    const { key } = e;
+    let nextIndexCount = 0;
+
+    if (key === "ArrowDown")
+      nextIndexCount = (focusedIndex + 1) % filteredArray?.length;
+
+    if (key === "ArrowUp")
+      nextIndexCount =
+        (focusedIndex + filteredArray?.length - 1) % filteredArray?.length;
+
+    setFocusedIndex(nextIndexCount);
+  };
+
+  const mouseHover = (e) => {
+    setFocusedIndex(Number(e.currentTarget.id));
+  };
+
+  useEffect(() => {
+    if (!resultContainer.current) return;
+
+    resultContainer.current.focus();
+  }, [focusedIndex]);
+
   return (
     <>
-      <div className="container">
+      <div tabIndex="0" onKeyDown={handleKeyDown} className="container">
         <input
           type="text"
           onChange={debouncedSearch()}
           placeholder="Search For something"
         ></input>
 
-        {fullTextSearch(searchedField)?.map((e, index) => {
-          return (
-            <div tabIndex={0} key={index} className="item">
-              <p>
-                {e.matchingInItems && searchedField.length > 0 && (
-                  <p className="blue-text">{`${searchedField} found in Items`}</p>
-                )}
-              </p>
-              <HighlightedText text={e.name} highlight={searchedField} />
-
-              <HighlightedText text={e.address} highlight={searchedField} />
-
-              <HighlightedText text={e.pincode} highlight={searchedField} />
-            </div>
-          );
-        })}
+        {filteredArray?.length > 0 ? (
+          filteredArray?.map((data, index) => {
+            return (
+              <div
+                ref={index === focusedIndex ? resultContainer : null}
+                key={index}
+                id={index}
+                onMouseOver={mouseHover}
+                className="item"
+                tabIndex="0"
+              >
+                <SearchedCard
+                  data={data}
+                  searchedField={searchedField}
+                ></SearchedCard>
+              </div>
+            );
+          })
+        ) : (
+          <p>Not Found</p>
+        )}
       </div>
     </>
   );

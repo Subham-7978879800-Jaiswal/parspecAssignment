@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const useFilter = () => {
   const [data, setData] = useState();
@@ -26,18 +26,21 @@ const useFilter = () => {
       });
   };
 
-  const fullTextSearch = (str) =>
-    data?.filter((e) => {
-      const filterText = str.toLowerCase();
-      const itemsString = e.items.join("|").toLowerCase();
+  const fullTextSearch = useCallback(
+    (str) =>
+      data?.filter((e) => {
+        const filterText = str.toLowerCase();
+        const itemsString = e.items.join("|").toLowerCase();
 
-      if (itemsString.includes(filterText)) {
-        e.matchingInItems = true;
-      } else {
-        e.matchingInItems = false;
-      }
-      return e.keywordString.includes(filterText);
-    });
+        if (itemsString.includes(filterText)) {
+          e.matchingInItems = true;
+        } else {
+          e.matchingInItems = false;
+        }
+        return e.keywordString.includes(filterText);
+      }),
+    [data]
+  );
 
   useEffect(() => getData(), []);
 
