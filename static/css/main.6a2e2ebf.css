@@ -1,0 +1,2 @@
+.container{height:200px;margin:200px auto auto;overflow-y:scroll;width:500px}.form,.item{align-items:center;border:1px solid #000;display:flex;flex-direction:column;justify-content:center;margin:16px}.item:focus{background-color:grey;cursor:pointer}.form{flex-direction:row;padding:16px}input[type=text]{display:block;margin:auto;padding:16px}.blue-text{color:#00f}
+/*# sourceMappingURL=main.6a2e2ebf.css.map*/

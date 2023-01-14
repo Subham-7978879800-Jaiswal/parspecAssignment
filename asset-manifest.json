@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/parspecAssignment/static/css/main.6a2e2ebf.css",
+    "main.js": "/parspecAssignment/static/js/main.591d31b0.js",
+    "index.html": "/parspecAssignment/index.html",
+    "main.6a2e2ebf.css.map": "/parspecAssignment/static/css/main.6a2e2ebf.css.map",
+    "main.591d31b0.js.map": "/parspecAssignment/static/js/main.591d31b0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6a2e2ebf.css",
+    "static/js/main.591d31b0.js"
+  ]
+}
